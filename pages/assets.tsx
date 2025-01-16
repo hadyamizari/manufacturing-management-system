@@ -1,19 +1,24 @@
 'use client';
 
 import { useState } from 'react';
-import { IconFilter, IconSearch } from '@tabler/icons-react';
+import { IconFilter } from '@tabler/icons-react';
 import { DataTable } from 'mantine-datatable';
 import {
   Button,
+  Combobox,
   Container,
   Divider,
   Group,
+  Modal,
   Paper,
   PaperProps,
+  Radio,
   Stack,
   Text,
   TextInput,
+  useCombobox,
 } from '@mantine/core';
+import { useDisclosure } from '@mantine/hooks';
 
 const records = [
   {
@@ -56,6 +61,26 @@ const PAPER_PROPS: PaperProps = {
 
 function AssetsPage() {
   const [search, setSearch] = useState('');
+  const [opened, { open, close }] = useDisclosure(false);
+
+  // Combobox data
+  const assignedToOptions = ['John Doe', 'Jane Smith', 'Michael Johnson'];
+  const modelTypeOptions = ['EX-200', 'BD-150', 'CR-500'];
+
+  // Combobox states
+  const [assignedTo, setAssignedTo] = useState<string | null>(null);
+  const [modelType, setModelType] = useState<string | null>(null);
+  const [warranty, setWarranty] = useState('any');
+
+  // Combobox hooks
+  const assignedToCombobox = useCombobox({
+    onDropdownClose: () => assignedToCombobox.resetSelectedOption(),
+  });
+
+  const modelTypeCombobox = useCombobox({
+    onDropdownClose: () => modelTypeCombobox.resetSelectedOption(),
+  });
+
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.currentTarget;
     setSearch(value);
@@ -71,7 +96,7 @@ function AssetsPage() {
             </Text>
             <Group>
               <Button variant="light"> + Add New</Button>
-              <Button variant="light">
+              <Button variant="light" onClick={open}>
                 <IconFilter size={20} stroke={2.2} />
               </Button>
             </Group>
@@ -102,6 +127,90 @@ function AssetsPage() {
                 ]}
                 records={records}
               />
+
+              <Modal padding={'lg'} opened={opened} onClose={close} title="Filter Assets">
+                <Stack gap={5}>
+                  {/* Assigned To Combobox */}
+                  <Text size="sm" fw={500} mt={'md'}>
+                    Assigned To
+                  </Text>
+                  <Combobox
+                    store={assignedToCombobox}
+                    onOptionSubmit={(val) => {
+                      setAssignedTo(val);
+                      assignedToCombobox.closeDropdown();
+                    }}
+                  >
+                    <Combobox.Target>
+                      <TextInput
+                        component="button"
+                        type="button"
+                        rightSection={<Combobox.Chevron />}
+                        placeholder="Select Assigned To"
+                        value={assignedTo || ''}
+                        onClick={() => assignedToCombobox.toggleDropdown()}
+                      />
+                    </Combobox.Target>
+                    <Combobox.Dropdown>
+                      <Combobox.Options>
+                        {assignedToOptions.map((item) => (
+                          <Combobox.Option value={item} key={item}>
+                            {item}
+                          </Combobox.Option>
+                        ))}
+                      </Combobox.Options>
+                    </Combobox.Dropdown>
+                  </Combobox>
+
+                  {/* Model Type Combobox */}
+                  <Text size="sm" fw={500} mt={'md'}>
+                    Model Type
+                  </Text>
+                  <Combobox
+                    store={modelTypeCombobox}
+                    onOptionSubmit={(val) => {
+                      setModelType(val);
+                      modelTypeCombobox.closeDropdown();
+                    }}
+                  >
+                    <Combobox.Target>
+                      <TextInput
+                        component="button"
+                        type="button"
+                        rightSection={<Combobox.Chevron />}
+                        placeholder="Select Model Type"
+                        value={modelType || ''}
+                        onClick={() => modelTypeCombobox.toggleDropdown()}
+                      />
+                    </Combobox.Target>
+                    <Combobox.Dropdown>
+                      <Combobox.Options>
+                        {modelTypeOptions.map((item) => (
+                          <Combobox.Option value={item} key={item}>
+                            {item}
+                          </Combobox.Option>
+                        ))}
+                      </Combobox.Options>
+                    </Combobox.Dropdown>
+                  </Combobox>
+
+                  {/* Warranty Radio Buttons */}
+                  <Text size="sm" fw={500} mt={'md'}>
+                    Warranty
+                  </Text>
+                  <Radio.Group value={warranty} onChange={setWarranty}>
+                    <Group>
+                      <Radio value="any" label="Yes" />
+                      <Radio value="active" label="No" />
+                    </Group>
+                  </Radio.Group>
+
+                  {/* Apply Button */}
+                  <Button onClick={() => close()} mt="md">
+                    Apply Filters
+                  </Button>
+                </Stack>
+              </Modal>
             </Paper>
           </Stack>
         </Stack>
