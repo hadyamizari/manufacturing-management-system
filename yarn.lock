@@ -12119,6 +12119,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"mantine-datatable@npm:^7.15.1":
+  version: 7.15.1
+  resolution: "mantine-datatable@npm:7.15.1"
+  peerDependencies:
+    "@mantine/core": ">=7.14"
+    "@mantine/hooks": ">=7.14"
+    clsx: ">=2"
+    react: ">=18.2"
+  checksum: 10c0/e66494a9bca7580ba6ed2818e0208707d609d55ec3b00e3203eba0d3c51422175f5ead188a8dcaf8990bce6c5a71d38563e38028f49ee0eb7631628f81c66e9f
+  languageName: node
+  linkType: hard
+
 "mantine-next-template@workspace:.":
   version: 0.0.0-use.local
   resolution: "mantine-next-template@workspace:."
@@ -12147,6 +12159,7 @@ __metadata:
     eslint-plugin-react: "npm:^7.37.2"
     jest: "npm:^29.7.0"
     jest-environment-jsdom: "npm:^29.7.0"
+    mantine-datatable: "npm:^7.15.1"
     next: "npm:15.0.1"
     postcss: "npm:^8.4.38"
     postcss-preset-mantine: "npm:1.17.0"
